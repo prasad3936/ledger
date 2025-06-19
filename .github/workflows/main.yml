@@ -32,7 +32,7 @@ jobs:
 
       - name: Build .exe with PyInstaller
         run: |
-          PyInstaller --onefile --name=LedgerOnline.v1.0.1 --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico  app.pyad
+          PyInstaller --onefile --name=LedgerOnline.v1.0.1 --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico  app.py
 
       - name: Download Inno Setup
         run: |
