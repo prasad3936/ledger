@@ -12,13 +12,13 @@ SetupIconFile=icon.ico
 
 ; --- Files to Include ---
 [Files]
-Source: "dist\LedgerOnlineOff.v1.0.1.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\LedgerOnline.v1.0.1.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 
 ; --- Shortcuts ---
 [Icons]
-Name: "{group}\Ledger App"; Filename: "{app}\LedgerOnlineOff.v1.0.1.exe"
-Name: "{commondesktop}\Ledger App"; Filename: "{app}\LedgerOnlineOff.v1.0.1.exe"; Tasks: desktopicon
+Name: "{group}\Ledger App"; Filename: "{app}\LedgerOnline.v1.0.1"
+Name: "{commondesktop}\Ledger App"; Filename: "{app}\LedgerOnline.v1.0.1.exe"; Tasks: desktopicon
 
 
 ; --- Uninstaller Behavior ---
@@ -32,4 +32,4 @@ Name: "{app}"; Type: filesandordirs
 Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
 
 [Run]
-Filename: "{app}\LedgerOnlineOff.v1.0.1.exe"; Description: "Launch Ledger App"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\LedgerOnline.v1.0.1.exe"; Description: "Launch Ledger App"; Flags: nowait postinstall skipifsilent
