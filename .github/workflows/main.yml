@@ -27,6 +27,7 @@ jobs:
       - name: Build .exe with PyInstaller
         run: |
           PyInstaller --onefile --name=LedgerOnline.v1.0.1 --noconsole --add-data "templates;templates" --add-data "static;static" --icon icon.ico  app.py
+
       - name: Download Inno Setup
         run: |
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
@@ -46,3 +47,9 @@ jobs:
           name: LedgerDeskApp-installer
           path: |
             Output/*.exe
+
+      - name: Upload .exe as GitHub Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: LedgerDeskApp-exe
+          path: dist/LedgerOnline.v1.0.1.exe
