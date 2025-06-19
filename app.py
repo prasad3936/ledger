@@ -20,14 +20,18 @@ app.secret_key = os.urandom(24)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://DB_USER: ${{ secrets.DB_USER }}:DB_PASSWORD: ${{ secrets.DB_PASSWORD }}@DB_HOST: ${{ secrets.DB_HOST }}:14627/ledgerdb'
 
 import os
+from dotenv import load_dotenv
+load_dotenv()  # only needed if you're using a .env file locally
 
 db_user = os.environ.get('DB_USER')
 db_password = os.environ.get('DB_PASSWORD')
 db_host = os.environ.get('DB_HOST')
-db_port = os.environ.get('DB_PORT', '14627')  # default if not set
+db_port = os.environ.get('DB_PORT', '14627')
 db_name = 'ledgerdb'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
