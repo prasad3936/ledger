@@ -30,7 +30,7 @@ jobs:
       - name: Download Inno Setup
         run: |
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
-          Start-Process .\is.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-
+          Start-Process .\is.exe -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-' -Wait
 
       - name: Add Inno Setup to PATH
         run: |
