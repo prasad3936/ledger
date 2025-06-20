@@ -17,8 +17,16 @@ app.secret_key = os.urandom(24)
 #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 import os
+import sys
 from dotenv import load_dotenv
-load_dotenv()  # only needed if you're using a .env file locally
+#load_dotenv()  # only needed if you're using a .env file locally
+if getattr(sys, 'frozen', False):
+    dotenv_path = os.path.join(sys._MEIPASS, '.env')
+else:
+    dotenv_path = '.env'
+
+load_dotenv(dotenv_path)
+
 
 db_user = os.environ.get('DB_USER')
 db_password = os.environ.get('DB_PASSWORD')
@@ -30,7 +38,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{db_user}:{db_password}@{db_ho
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)

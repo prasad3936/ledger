@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - "v*" # Trigger workflow when pushing tags like v1.0.0
+      - 'v*'  # Trigger workflow when pushing tags like v1.0.0
     paths-ignore:
       - "README.md"
       - "README.MD"
@@ -36,11 +36,6 @@ jobs:
           echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=14627 >> .env
-
-      - name: Debug .env file
-        run: |
-          type .env
-          echo "Environment variables set for the build."
 
       - name: Build .exe with PyInstaller
         shell: pwsh
