@@ -43,6 +43,10 @@ jobs:
           # Update installer.iss with the versioned exe name
           (Get-Content installer.iss) -replace 'Source: "dist\\LedgerOnline.*\.exe"', ("Source: `"dist\LedgerOnline.{0}.exe`"" -f $env:VERSION) | Set-Content installer.iss
 
+      - name: Ensure release is only created for tags
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "Creating release for tag ${{ github.ref_name }}"
+
       - name: Download Inno Setup
         run: |
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
