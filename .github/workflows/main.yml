@@ -36,11 +36,12 @@ jobs:
           echo DB_PORT=14627 >> .env
 
       - name: Build .exe with PyInstaller
+        shell: pwsh
         run: |
-          VERSION=${{ github.ref_name }}
-          PyInstaller --onefile --name=LedgerOnline.${VERSION} --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
+          $env:VERSION = "${{ github.ref_name }}"
+          pyinstaller --onefile --name="LedgerOnline.$env:VERSION" --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
           # Update installer.iss with the versioned exe name
-          powershell -Command "(Get-Content installer.iss) -replace 'Source: \"dist\\\\LedgerOnline.*\.exe\"', 'Source: \"dist\\LedgerOnline.${VERSION}.exe\"' | Set-Content installer.iss"
+          (Get-Content installer.iss) -replace 'Source: "dist\\LedgerOnline.*\.exe"', "Source: \"dist\LedgerOnline.$env:VERSION.exe\"" | Set-Content installer.iss
 
       - name: Download Inno Setup
         run: |
