@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "README.md"
+      - "README.MD"
+      - "ledger.html"
 
 jobs:
   build:
@@ -33,7 +37,10 @@ jobs:
 
       - name: Build .exe with PyInstaller
         run: |
-          PyInstaller --onefile --name=LedgerOnline.v1.0.1 --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
+          VERSION=${{ github.ref_name }}
+          PyInstaller --onefile --name=LedgerOnline.${VERSION} --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
+          # Update installer.iss with the versioned exe name
+          powershell -Command "(Get-Content installer.iss) -replace 'Source: \"dist\\\\LedgerOnline.*\.exe\"', 'Source: \"dist\\LedgerOnline.${VERSION}.exe\"' | Set-Content installer.iss"
 
       - name: Download Inno Setup
         run: |
@@ -55,8 +62,15 @@ jobs:
           path: |
             Output/*.exe
 
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Output/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload .exe as GitHub Package
         uses: actions/upload-artifact@v4
         with:
           name: LedgerDeskApp-exe
-          path: dist/LedgerOnline.v1.0.1.exe
+          path: dist/*.exe
