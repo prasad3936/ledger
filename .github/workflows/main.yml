@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - "v*" # Trigger workflow when pushing tags like v1.0.0
+      - 'v*'
     paths-ignore:
       - "README.md"
       - "README.MD"
@@ -37,17 +37,11 @@ jobs:
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=14627 >> .env
 
-      - name: Debug .env file
-        run: |
-          type .env
-          echo "Environment variables set for the build."
-
       - name: Build .exe with PyInstaller
         shell: pwsh
         run: |
           $env:VERSION = "${{ github.ref_name }}"
           pyinstaller --onefile --name="LedgerOnline.$env:VERSION" --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
-          # Update installer.iss with the versioned exe name
           (Get-Content installer.iss) -replace 'Source: "dist\\LedgerOnline.*\.exe"', ("Source: `"dist\LedgerOnline.{0}.exe`"" -f $env:VERSION) | Set-Content installer.iss
 
       - name: Download Inno Setup
@@ -63,23 +57,29 @@ jobs:
         run: |
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 
-      - name: Upload installer as artifact
+      - name: Zip the installer .exe
+        run: |
+          $installer = Get-ChildItem -Path Output -Filter *.exe | Select-Object -First 1
+          Compress-Archive -Path $installer.FullName -DestinationPath LedgerOnline.zip
+
+      - name: Upload zipped installer as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: LedgerDeskApp-installer
-          path: |
-            Output/*.exe
+          name: LedgerDeskApp-zip
+          path: LedgerOnline.zip
 
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: Output/*.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload .exe as GitHub Package
+      - name: Upload raw installer .exe as artifact
         uses: actions/upload-artifact@v4
         with:
           name: LedgerDeskApp-exe
-          path: dist/*.exe
+          path: Output/*.exe
+
+      - name: Create GitHub Release with .exe and .zip
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            Output/*.exe
+            LedgerOnline.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
