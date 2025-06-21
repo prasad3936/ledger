@@ -45,6 +45,19 @@ jobs:
           # Update installer.iss with the versioned exe name
           (Get-Content installer.iss) -replace 'Source: "dist\\LedgerOnline.*\.exe"', ("Source: `"dist\LedgerOnline.{0}.exe`"" -f $env:VERSION) | Set-Content installer.iss
 
+      - name: Debug: Run generated .exe and capture output
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path dist -Filter *.exe | Select-Object -First 1
+          Write-Host "Running $($exe.FullName)..."
+          & $exe.FullName *>&1 | Tee-Object -FilePath dist\run_output.log
+
+      - name: Upload debug log
+        uses: actions/upload-artifact@v4
+        with:
+          name: exe-debug-log
+          path: dist/run_output.log
+
       - name: Download Inno Setup
         run: |
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
