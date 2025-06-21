@@ -42,8 +42,16 @@ jobs:
         run: |
           $env:VERSION = "${{ github.ref_name }}"
           pyinstaller --onefile --name="LedgerOnline.$env:VERSION" --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
-          # Update installer.iss with the versioned exe name
-          (Get-Content installer.iss) -replace 'Source: "dist\\LedgerOnline.*\.exe"', ("Source: `"dist\LedgerOnline.{0}.exe`"" -f $env:VERSION) | Set-Content installer.iss
+          
+          # Dynamically update installer.iss for versioned .exe references
+          $exeName = "LedgerOnline.$env:VERSION.exe"
+          (Get-Content installer.iss) `
+            -replace 'Source: "dist\\LedgerOnline.*?\.exe"', "Source: `\"dist\\$exeName`\"" `
+            -replace 'Filename: "\{app\}\\LedgerOnline[^"]*"', "Filename: `{app}\\LedgerOnline.$env:VERSION.exe" `
+            | Set-Content installer.iss
+
+      - name: Debug dist folder contents
+        run: dir dist
 
       - name: Download Inno Setup
         run: |
