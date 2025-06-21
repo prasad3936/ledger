@@ -41,17 +41,15 @@ jobs:
         shell: pwsh
         run: |
           $env:VERSION = "${{ github.ref_name }}"
-          pyinstaller --onefile --name="LedgerOnline.$env:VERSION" --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
-          
-          # Dynamically update installer.iss for versioned .exe references
-          $exeName = "LedgerOnline.$env:VERSION.exe"
-          (Get-Content installer.iss) `
-            -replace 'Source: "dist\\LedgerOnline.*?\.exe"', "Source: `\"dist\\$exeName`\"" `
-            -replace 'Filename: "\{app\}\\LedgerOnline[^"]*"', "Filename: `{app}\\LedgerOnline.$env:VERSION.exe" `
-            | Set-Content installer.iss
+          $exeName = "LedgerOnline.$($env:VERSION).exe"
+          pyinstaller --onefile --name=$exeName --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
 
-      - name: Debug dist folder contents
-        run: dir dist
+          # Update installer.iss with correct executable name
+          $content = Get-Content installer.iss
+          $content = $content -replace 'Source: "dist\\LedgerOnline.*?\.exe"', "Source: `"dist\\$exeName`""
+          $content = $content -replace 'Filename: "\{app\}\\LedgerOnline[^"]*"', "Filename: `{app}\\$exeName"
+          $content = $content -replace 'Filename: "\{app\}\\LedgerOnline.*?\.exe"', "Filename: `{app}\\$exeName"
+          Set-Content installer.iss $content
 
       - name: Download Inno Setup
         run: |
