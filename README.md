@@ -2,12 +2,6 @@
 
 A simple yet powerful desktop application built to help individuals and small businesses track money lent and received. Whether you're managing customer dues or keeping personal lending records, **Ledger** makes it easy to stay organized and transparent.
 
----
-
-## ⚠️ Important Notice
-
-Chrome may flag this file as dangerous because it's not widely downloaded yet.
-**You can safely download and run it if you trust the source.**
 
 ---
 
