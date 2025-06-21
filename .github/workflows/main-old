@@ -1,0 +1,80 @@
+name: Build and Package App
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'  # Trigger workflow when pushing tags like v1.0.0
+    paths-ignore:
+      - "README.md"
+      - "README.MD"
+      - "ledger.html"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Create .env file from secrets
+        run: |
+          echo DB_USER=${{ secrets.DB_USER }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          echo DB_PORT=14627 >> .env
+
+      - name: Build .exe with PyInstaller
+        shell: pwsh
+        run: |
+          $env:VERSION = "${{ github.ref_name }}"
+          pyinstaller --onefile --name="LedgerOnline.$env:VERSION" --noconsole --add-data "templates;templates" --add-data "static;static" --add-data ".env;." --icon icon.ico app.py
+          # Update installer.iss with the versioned exe name
+          (Get-Content installer.iss) -replace 'Source: "dist\\LedgerOnline.*\.exe"', ("Source: `"dist\LedgerOnline.{0}.exe`"" -f $env:VERSION) | Set-Content installer.iss
+
+      - name: Download Inno Setup
+        run: |
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
+          Start-Process .\is.exe -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-' -Wait
+
+      - name: Add Inno Setup to PATH
+        run: |
+          echo "C:\Program Files (x86)\Inno Setup 6" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Create installer with Inno Setup
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
+      - name: Upload installer as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LedgerDeskApp-installer
+          path: |
+            Output/*.exe
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Output/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload .exe as GitHub Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: LedgerDeskApp-exe
+          path: dist/*.exe
