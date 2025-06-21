@@ -4,32 +4,37 @@ A simple yet powerful desktop application built to help individuals and small bu
 
 ---
 
+## ⚠️ Important Notice
+
+Chrome may flag this file as dangerous because it's not widely downloaded yet.
+**You can safely download and run it if you trust the source.**
+
+---
+
 ## 🔧 Features
 
-- **User Authentication:** Create a secure user account and login.
-- **Add Customers:** Store customer name, phone number, and initial balance.
-- **Transaction Management:**
+* **User Authentication:** Create a secure user account and login.
+* **Add Customers:** Store customer name, phone number, and initial balance.
+* **Transaction Management:**
 
-  - **Credit:** Add new amounts to the customer's due.
-  - **Debit:** Subtract received payments from the customer's balance.
+  * **Credit:** Add new amounts to the customer's due.
+  * **Debit:** Subtract received payments from the customer's balance.
+* **History & Reporting:**
 
-- **History & Reporting:**
-
-  - View full transaction history for each customer.
-  - Print transaction history as an invoice.
-
-- **Search Functionality:** Quickly find customers by name.
-- **Customer List:** Print or view the full list of customers.
-- **Advertisement Carousel:** Display rotating banners/ads inside the app.
+  * View full transaction history for each customer.
+  * Print transaction history as an invoice.
+* **Search Functionality:** Quickly find customers by name.
+* **Customer List:** Print or view the full list of customers.
+* **Advertisement Carousel:** Display rotating banners/ads inside the app.
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Python (Flask)
-- **Database:** MySQL (bundled and embedded – no need for host system installation)
-- **Desktop App Packaging:** PyInstaller + Inno Setup Compiler (for Windows)
+* **Frontend:** HTML, CSS, JavaScript
+* **Backend:** Python (Flask)
+* **Database:** MySQL (bundled and embedded – no need for host system installation)
+* **Desktop App Packaging:** PyInstaller + Inno Setup Compiler (for Windows)
 
 ---
 
@@ -53,44 +58,44 @@ This manual is designed for users who will be using Ledger to manage and track t
 
 1. **Install and Open Ledger**
 
-   - Double-click the installed Ledger app icon to launch.
+   * Double-click the installed Ledger app icon to launch.
 
 2. **Register an Account**
 
-   - Click on "Register" to create your personal login.
+   * Click on "Register" to create your personal login.
 
 3. **Login**
 
-   - Use your credentials to securely access your dashboard.
+   * Use your credentials to securely access your dashboard.
 
 4. **Add a Customer**
 
-   - Enter customer name, contact number, and starting balance.
+   * Enter customer name, contact number, and starting balance.
 
 5. **Manage Transactions**
 
-   - Use **Credit** to add owed amounts.
-   - Use **Debit** to record received payments.
+   * Use **Credit** to add owed amounts.
+   * Use **Debit** to record received payments.
 
 6. **View History**
 
-   - Click on a customer to see their full payment and dues history.
-   - Use the print option to generate and save an invoice.
+   * Click on a customer to see their full payment and dues history.
+   * Use the print option to generate and save an invoice.
 
 7. **Search or List**
 
-   - Use the search bar to quickly find customers by name.
-   - View the complete customer list at any time.
+   * Use the search bar to quickly find customers by name.
+   * View the complete customer list at any time.
 
 8. **View Ads** (optional)
 
-   - App includes a rotating advertisement carousel.
+   * App includes a rotating advertisement carousel.
 
 ### Notes:
 
-- Your data is saved securely inside the application.
-- No external database setup required.
-- Make sure to log out after use for security.
+* Your data is saved securely inside the application.
+* No external database setup required.
+* Make sure to log out after use for security.
 
 ---
 
@@ -101,6 +106,9 @@ This manual is designed for users who will be using Ledger to manage and track t
 3. Launch Ledger from your desktop.
 
 > Note: No need to install MySQL separately. All required components are bundled in the package.
+
+⚠️ **Chrome may flag this file as dangerous because it's not widely downloaded yet.**
+**You can safely download and run it if you trust the source.**
 
 ---
 
